@@ -1,0 +1,1 @@
+import bcrypt from'bcryptjs';import{pool}from'./db.js';export async function ensureDemoCredentials(){if(process.env.DEMO_ACCOUNTS!=='true')return;const hash=await bcrypt.hash('password',12);await pool.execute("UPDATE users SET password_hash=? WHERE email IN('admin@campushire.local','student@campushire.local')",[hash]);}

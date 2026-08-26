@@ -1,0 +1,2 @@
+export function notFound(_req,res){res.status(404).json({error:'Route not found'});}
+export function errorHandler(err,_req,res,_next){console.error(err.code||err.message);if(err.code==='ER_DUP_ENTRY')return res.status(409).json({error:'A unique record already exists'});if(err.code?.startsWith('ER_NO_REFERENCED'))return res.status(422).json({error:'Referenced record does not exist'});if(err.sqlState==='45000')return res.status(409).json({error:err.sqlMessage});res.status(500).json({error:'Internal server error'});}
