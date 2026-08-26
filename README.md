@@ -1,66 +1,117 @@
-# CampusHire — Student Internship & Recruitment Management System
+<div align="center">
+  <h1>CampusHire</h1>
+  <p><strong>Enterprise-Grade Student Internship & Recruitment Management System</strong></p>
+  <p>A database-first full-stack university placement platform covering discovery → application → interview → offer → internship → evaluation, with auditable workflow history and advanced SQL-driven analytics.</p>
+</div>
 
-A database-first full-stack university placement platform covering discovery → application → interview → offer → internship → evaluation, with auditable workflow history and SQL-driven analytics.
+<hr />
 
-> **Data disclosure:** bundled demo/reference records and generated full-lifecycle records are synthetic. CampusHire does not claim real university users, company partnerships, or production recruitment statistics.
+> **Data disclosure:** Bundled demo/reference records and generated full-lifecycle records are synthetic. CampusHire does not claim real university users, company partnerships, or production recruitment statistics.
 
-## Quick start
+## 🚀 Quick Start
+
+Get CampusHire running locally in minutes:
+
 ```bash
 git clone https://github.com/AagneyVk/CampusHire.git
 cd CampusHire
 docker compose up --build
 ```
-Open `http://localhost:5173`. API health: `http://localhost:4000/api/health`.
+- **Web App:** [http://localhost:5173](http://localhost:5173)
+- **API Health Check:** [http://localhost:4000/api/health](http://localhost:4000/api/health)
 
-**Local demo accounts** (Docker development mode only):
-- Student: `student@campushire.local` / `password`
-- Admin: `admin@campushire.local` / `password`
+**Local Demo Accounts** (Docker development mode only):
+- **Student:** `student@campushire.local` / `password`
+- **Admin:** `admin@campushire.local` / `password`
 
-The backend regenerates those two bcrypt hashes at startup only when `DEMO_ACCOUNTS=true`; production should keep this disabled and use a strong JWT secret.
+*Note: The backend regenerates these bcrypt hashes at startup only when `DEMO_ACCOUNTS=true`. Production deployments must disable this and enforce a strong JWT secret.*
 
-## Architecture
+## 🏗 Architecture
+
 ```text
-Browser → React + Vite → REST/JSON → Express → parameterized mysql2 SQL → MySQL 8
+Browser → React + Vite → REST/JSON → Express → Parameterized mysql2 SQL → MySQL 8
 ```
-MySQL is the authoritative system of record. The browser never connects to it directly. See [architecture](docs/architecture-diagram.md) and [ER model](docs/er-diagram.md).
+MySQL serves as the authoritative system of record. The client application never interacts with it directly. 
+For deep dives, see our [Architecture Diagram](docs/architecture-diagram.md) and [Entity-Relationship (ER) Model](docs/er-diagram.md).
 
-## Functional scope
-**Student:** register/login, profile, skills, paginated internship discovery, search/filter, detail/apply, duplicate protection, applications, status timeline, interviews, offers/response, internship history/evaluation, and database-driven skill matching.
+## ✨ Functional Scope
 
-**Placement admin:** dashboard analytics, students/companies/internships/applications/interviews/offers/records/evaluations, company/posting creation APIs, controlled application state transitions, interview/result workflow, offers, internship records and evaluations.
+- **Student Portal:** Secure registration/login, profile management, skill mapping, paginated internship discovery, search and filter capabilities, detail view/apply workflow, duplicate application protection, application status timeline, interview scheduling, offer response management, internship history logging, and database-driven skill matching.
+- **Placement Administration:** Comprehensive dashboard analytics, management of students, companies, internships, applications, interviews, offers, and evaluations. Features robust APIs for company/posting creation, controlled application state transitions, and interview outcome workflows.
 
-Company-user ownership is normalized in the schema but the full company portal remains a documented extension so the assessed core stays focused on Student + Admin.
+*Note: Company-user ownership is fully normalized within the database schema. While a dedicated company portal is a logical extension, the core system focuses on the Student and Admin experiences to maintain a tight, assessable core.*
 
-## Database design
-16 relations: `departments`, `industries`, `users`, `students`, `companies`, `company_users`, `skills`, `student_skills`, `internships`, `internship_skills`, `applications`, `application_status_history`, `interviews`, `offers`, `internship_records`, `evaluations`.
+## 🗄️ Database Design
 
-The model targets defensible 3NF. It demonstrates PK/FK/composite keys, UNIQUE/NOT NULL/CHECK constraints, sensible delete behavior, M:N junction tables, composite indexes, views, triggers, transactions, state history, INNER/LEFT JOIN, GROUP BY/HAVING, nested/correlated subqueries, EXISTS/NOT EXISTS, date analytics, relational division and pagination. See the [database design](docs/database-design.md), [data dictionary](docs/data-dictionary.md), and [business rules](docs/business-rules.md).
+The schema is built on **16 optimized relations**: `departments`, `industries`, `users`, `students`, `companies`, `company_users`, `skills`, `student_skills`, `internships`, `internship_skills`, `applications`, `application_status_history`, `interviews`, `offers`, `internship_records`, and `evaluations`.
 
-## SQL
-`database/queries.sql` contains **35 evaluation-ready queries**, including time-to-stage, conversion/funnel analysis, skill co-occurrence, relational skill matching, fill rate, monthly trends and industry evaluation performance. Ten strong viva examples are explained in [query-demonstration.md](docs/query-demonstration.md).
+The data model aggressively targets **defensible 3NF**. It demonstrates:
+- Primary/Foreign/Composite Keys
+- `UNIQUE`, `NOT NULL`, and `CHECK` constraints
+- Sensible cascading delete behaviors
+- M:N junction tables
+- Composite indexes and Views
+- DB-level Triggers and Transactions
+- Immutable state history
+- Advanced querying techniques: `INNER`/`LEFT JOIN`, `GROUP BY`/`HAVING`, nested/correlated subqueries, `EXISTS`/`NOT EXISTS`, temporal data analytics, relational division, and scalable pagination.
 
-Views: `student_application_summary`, `internship_application_stats`, `company_recruitment_summary`, `placement_statistics`, `application_funnel_statistics`, `skill_demand_statistics`, `internship_outcome_statistics`.
+Detailed resources: [Database Design](docs/database-design.md), [Data Dictionary](docs/data-dictionary.md), and [Business Rules](docs/business-rules.md).
 
-## Data strategy
-### Demo mode
-`docker compose up --build` loads a small deterministic synthetic dataset from `database/seed.sql` for fast demonstration.
+## 📊 SQL Analytics
 
-### Full dataset mode
+The `database/queries.sql` file contains **35 evaluation-ready queries**. These cover advanced analytics such as time-to-stage tracking, funnel conversion analysis, skill co-occurrence mapping, relational skill matching, fill rate calculations, and monthly industry trends. Ten robust Viva examples are documented in [Query Demonstrations](docs/query-demonstration.md).
+
+**Key Materialized Views:**
+`student_application_summary`, `internship_application_stats`, `company_recruitment_summary`, `placement_statistics`, `application_funnel_statistics`, `skill_demand_statistics`, `internship_outcome_statistics`.
+
+## 📈 Data Strategy & Generation
+
+### Demo Mode
+Running `docker compose up --build` automatically loads a small, deterministic synthetic dataset from `database/seed.sql` for rapid demonstration purposes.
+
+### Enterprise Dataset Mode
+To stress-test the system with high-volume data, utilize the provided generation script:
+
 ```bash
 python scripts/generate_data.py
 docker compose exec -T mysql mysql -ucampushire -pcampushire campushire < database/generated_seed.sql
 ```
-The deterministic seed is `20260826`. Target output: 20 departments, 120 skills, 300 companies, 800 internships, 3,000 students, 10,000 applications, up to 3,000 interviews, ~1,000 offers depending on the deterministic funnel, up to 650 internship records, and up to 500 evaluations. The generator creates temporally ordered lifecycle data and explicit application status history.
+The deterministic seed is `20260826`. **Target output configuration:**
+- **Departments:** 20
+- **Skills:** 120
+- **Companies:** 1,000
+- **Internships:** 5,000
+- **Students:** 15,000
+- **Applications:** 50,000
+- **Interviews:** Up to 15,000
+- **Offers:** ~6,000 (dictated by the deterministic funnel)
+- **Internship Records:** Up to 3,500
+- **Evaluations:** Up to 2,800
 
-`clean_data.py` / `import_data.py` define an optional public-data boundary. No third-party dataset is bundled, so there is no unsupported licensing/provenance claim.
+The generator automatically creates temporally ordered, highly realistic lifecycle data with an explicit application status history.
 
-## Security and integrity
-bcrypt password hashing; JWT authentication; Student/Admin RBAC; Helmet; restricted CORS; 1 MB JSON limit; auth rate limiting; parameterized SQL; centralized safe errors; `.env` exclusion; input/range checks; owner-scoped student queries; DB constraints/triggers. JWT storage in localStorage is an accepted academic-project tradeoff; an HTTP-only cookie/CSRF design would be preferable for a public production deployment.
+*Data Boundary: `clean_data.py` and `import_data.py` define an optional public-data boundary. No third-party dataset is bundled, ensuring zero unsupported licensing or provenance claims.*
 
-## Testing and CI
-GitHub Actions starts MySQL 8, initializes schema → views → triggers → seed, executes the 35 SQL queries, runs backend MySQL integration tests, then builds the React frontend. Tests cover database health, registration, duplicate rejection, login, RBAC, internship pagination/validation, duplicate applications, and closed-internship trigger enforcement. See [testing.md](docs/testing.md).
+## 🔒 Security & Data Integrity
 
-## Project structure
+- **Authentication & Authorization:** bcrypt password hashing, JWT authentication, and strict Student/Admin RBAC.
+- **Network & Payload:** Helmet middleware, restricted CORS, 1 MB JSON payload limits, and API rate limiting.
+- **Database Security:** Parameterized SQL queries to prevent injections, centralized safe error handling, `.env` file exclusion, strict input/range checks, owner-scoped student queries, and robust DB constraints/triggers.
+- *(Note: JWT storage in `localStorage` is an accepted academic tradeoff; a production deployment should migrate to HTTP-only cookies with CSRF tokens.)*
+
+## 🧪 Testing and CI/CD
+
+The project leverages **GitHub Actions** for continuous integration. The pipeline:
+1. Provisions a MySQL 8 instance.
+2. Initializes the schema, views, triggers, and seed data.
+3. Validates the 35 SQL analytics queries.
+4. Executes backend MySQL integration tests.
+5. Builds the React frontend.
+
+Test coverage includes database health, user registration workflows, duplicate rejection, login mechanisms, RBAC enforcement, internship validation, duplicate application blocking, and closed-internship trigger enforcement. See [Testing Documentation](docs/testing.md).
+
+## 📂 Project Structure
+
 ```text
 backend/src/
   app.js  db.js  server.js  demoSeed.js
@@ -76,21 +127,20 @@ docs/
 docker-compose.yml
 ```
 
-## Documentation
-- [Architecture](docs/architecture-diagram.md)
-- [ER diagram](docs/er-diagram.md)
-- [Database design / normalization](docs/database-design.md)
-- [Data dictionary](docs/data-dictionary.md)
-- [Business rules / state machine](docs/business-rules.md)
-- [API reference](docs/api-documentation.md)
-- [SQL viva demonstrations](docs/query-demonstration.md)
-- [Testing](docs/testing.md)
+## 📚 Documentation Directory
 
-## Screenshots
-Only real screenshots from a running build should be placed under `docs/screenshots/`. None are fabricated or committed merely to make the repository appear finished.
+- [Architecture Diagram](docs/architecture-diagram.md)
+- [Entity-Relationship (ER) Diagram](docs/er-diagram.md)
+- [Database Design & Normalization](docs/database-design.md)
+- [Data Dictionary](docs/data-dictionary.md)
+- [Business Rules & State Machine](docs/business-rules.md)
+- [API Reference](docs/api-documentation.md)
+- [SQL Viva Demonstrations](docs/query-demonstration.md)
+- [Testing Strategy](docs/testing.md)
 
-## Future work
-A full company self-service portal using `company_users`, institution SSO, resume object storage, and notification delivery are sensible extensions but deliberately outside the DBMS-first assessed core.
+## 🔮 Future Roadmap
 
-## License
-MIT — see `LICENSE`.
+Future iterations could introduce a comprehensive company self-service portal utilizing the existing `company_users` relation, institution Single Sign-On (SSO) integration, resume object storage (S3/GCS), and automated notification delivery architectures. These are currently outside the primary DBMS-focused scope.
+
+## 📄 License
+Released under the **MIT License** — see `LICENSE` for details.
