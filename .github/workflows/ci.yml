@@ -18,7 +18,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
-        with: {node-version: 22, cache: npm, cache-dependency-path: backend/package.json}
+        with: {node-version: 22}
       - name: Initialize database
         run: |
           mysql -h127.0.0.1 -uroot -proot < database/schema.sql
