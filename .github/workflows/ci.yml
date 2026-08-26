@@ -3,16 +3,40 @@ on: [push, pull_request]
 jobs:
   verify:
     runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:8.4
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: campushire
+          MYSQL_USER: campushire
+          MYSQL_PASSWORD: campushire
+        ports: ['3306:3306']
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1 -uroot -proot"
+          --health-interval=5s --health-timeout=5s --health-retries=20
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
-        with: {node-version: 22}
-      - name: Backend install and smoke tests
+        with: {node-version: 22, cache: npm, cache-dependency-path: backend/package.json}
+      - name: Initialize database
+        run: |
+          mysql -h127.0.0.1 -uroot -proot < database/schema.sql
+          mysql -h127.0.0.1 -uroot -proot campushire < database/views.sql
+          mysql -h127.0.0.1 -uroot -proot campushire < database/business_rules.sql
+          mysql -h127.0.0.1 -uroot -proot campushire < database/seed.sql
+          mysql -h127.0.0.1 -uroot -proot campushire < database/queries.sql > /tmp/query-results.txt
+      - name: Backend integration tests
         working-directory: backend
         run: npm install && npm test
         env:
-          JWT_SECRET: ci-test-secret
           NODE_ENV: test
-      - name: Frontend install and build
+          JWT_SECRET: ci-integration-secret
+          DB_HOST: 127.0.0.1
+          DB_PORT: 3306
+          DB_NAME: campushire
+          DB_USER: campushire
+          DB_PASSWORD: campushire
+      - name: Frontend production build
         working-directory: frontend
         run: npm install && npm run build
