@@ -1,0 +1,18 @@
+name: CI
+on: [push, pull_request]
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: {node-version: 22}
+      - name: Backend install and smoke tests
+        working-directory: backend
+        run: npm install && npm test
+        env:
+          JWT_SECRET: ci-test-secret
+          NODE_ENV: test
+      - name: Frontend install and build
+        working-directory: frontend
+        run: npm install && npm run build
