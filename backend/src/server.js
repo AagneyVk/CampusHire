@@ -1,4 +1,1 @@
-import 'dotenv/config';
-import app from './app.js';
-const port=Number(process.env.PORT||4000);
-app.listen(port,()=>console.log(`CampusHire API listening on :${port}`));
+import'dotenv/config';import app from'./app.js';import{ensureDemoCredentials}from'./demoSeed.js';const port=Number(process.env.PORT||4000);await ensureDemoCredentials();app.listen(port,()=>console.log(`CampusHire API listening on :${port}`));
