@@ -14,12 +14,13 @@ services:
       - ./database/business_rules.sql:/docker-entrypoint-initdb.d/03-business-rules.sql:ro
       - ./database/seed.sql:/docker-entrypoint-initdb.d/04-seed.sql:ro
     healthcheck:
-      test: ["CMD","mysqladmin","ping","-h","localhost","-ucampushire","-pcampushire"]
+      test: ["CMD","mysqladmin","ping","-h","127.0.0.1","-ucampushire","-pcampushire"]
       interval: 5s
       timeout: 5s
       retries: 30
   backend:
     build: ./backend
+    restart: on-failure
     environment:
       PORT: 4000
       DB_HOST: mysql
@@ -36,6 +37,7 @@ services:
         condition: service_healthy
   frontend:
     build: ./frontend
+    restart: on-failure
     environment:
       VITE_API_URL: http://localhost:4000/api
     ports: ["5173:5173"]
