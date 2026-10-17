@@ -1,5 +1,5 @@
 import React from 'react';
-import {Routes,Route,Navigate} from 'react-router-dom';
+import {Routes,Route,Navigate,useLocation} from 'react-router-dom';
 import Home from './pages/Home.jsx';
 import Login from './pages/Login.jsx';
 import Register from './pages/Register.jsx';
@@ -20,7 +20,7 @@ const Guard=({role,children,allowIncomplete=false})=>{
   return children;
 };
 
-export default function App(){return <Routes>
+export default function App(){const location=useLocation();const loggedIn=Boolean(localStorage.getItem('token')),student=localStorage.getItem('role')==='student',complete=localStorage.getItem('profileComplete')==='true';if(loggedIn&&student&&!complete&&location.pathname!=='/complete-profile')return <Navigate to="/complete-profile" replace/>;return <Routes>
   <Route path="/" element={<Home/>}/>
   <Route path="/login" element={<Login/>}/>
   <Route path="/register" element={<Register/>}/>
