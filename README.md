@@ -27,7 +27,7 @@ MySQL is the authoritative system of record. The browser never connects to it di
 ## Functional scope
 **Student:** register/login, profile, skills, paginated internship discovery, search/filter, detail/apply, duplicate protection, applications, status timeline, interviews, offers/response, internship history/evaluation, and database-driven skill matching.
 
-**Placement admin:** dashboard analytics, students/companies/internships/applications/interviews/offers/records/evaluations, company/posting creation APIs, controlled application state transitions, interview/result workflow, offers, internship records and evaluations.
+**Placement admin:** dashboard analytics, students/companies/internships/applications/interviews/offers/records/evaluations, a dashboard form for posting new internships, company/posting creation APIs, controlled application state transitions, interview/result workflow, offers, internship records and evaluations.
 
 Company-user ownership is normalized in the schema but the full company portal remains a documented extension so the assessed core stays focused on Student + Admin.
 
@@ -43,7 +43,7 @@ Views: `student_application_summary`, `internship_application_stats`, `company_r
 
 ## Data strategy
 ### Demo mode
-`docker compose up --build` loads a small deterministic synthetic dataset from `database/seed.sql` for fast demonstration.
+`docker compose up --build` loads a small synthetic dataset from `database/seed.sql` for fast demonstration. Demo mode also ensures five additional sample postings (frontend, cloud, cybersecurity, data analyst and embedded systems) at backend startup. These are fictional examples, not verified real-world vacancies.
 
 ### Full dataset mode
 ```bash
