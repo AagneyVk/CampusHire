@@ -6,3 +6,56 @@
 .post-panel{width:100%;max-width:none;margin:34px 0 44px;padding:26px}.post-panel-header h2{font:32px 'DM Serif Display',serif;margin:8px 0}.post-panel-header p{color:#69665f;line-height:1.55;margin-top:0;max-width:720px}.post-form{width:100%;max-width:none;margin:10px 0 0}.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 20px}.form-grid .wide-field{grid-column:1/-1}.form-grid textarea{min-height:110px;resize:vertical}.field-hint{font-size:12px;font-weight:400;color:#777}.form-alert{padding:12px 14px;margin:15px 0;border:1px solid #dedbd3;background:#f5f2eb;font-size:13px}.form-alert.error{border-color:#a6443b;background:#fbefed;color:#8c2f27}.form-alert.success{border-color:#8aa68d;background:#edf5ee;color:#285932}.post-form-footer{display:flex;align-items:center;justify-content:space-between;gap:18px;margin-top:12px}.post-form-footer p{margin:0}.post-form-footer button:disabled{opacity:.5;cursor:not-allowed}@media(max-width:650px){.form-grid{grid-template-columns:1fr}.form-grid .wide-field{grid-column:auto}.post-panel{padding:18px}.post-form-footer{align-items:stretch;flex-direction:column}.post-form-footer button{width:100%}}
 
 @media(max-width:850px){.filterbar>select{width:100%;flex:auto}}
+
+/* Internship discovery */
+.internships-page{max-width:1500px;margin:0 auto}
+.internships-intro{max-width:760px;margin:-8px 0 22px;color:#666157;line-height:1.65}
+.internship-toolbar{margin-bottom:22px}
+.filterbar.internship-search-row{align-items:end;flex-direction:row;gap:12px;margin:20px 0 12px}
+.internship-search-row>.search{height:49px;flex:1 1 400px;max-width:650px}
+.internship-search-row>.search:focus-within{flex-grow:2}
+.internship-search-row .filter-control{flex:0 0 174px;width:174px}
+.filter-control{display:block;min-width:0;margin:0;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:#68645b}
+.filter-control input,.filter-control select{display:block;width:100%;height:49px;margin-top:7px;padding:0 12px;font-size:14px;letter-spacing:normal;text-transform:none;border:1px solid #d8d5cc;background:#fff;border-radius:4px;color:#181816}
+.filter-control input::placeholder{color:#969187}
+.filter-control input:focus,.filter-control select:focus{border-color:#181816;outline:none;box-shadow:0 0 0 2px rgba(24,24,22,.08)}
+.filter-control select:disabled{color:#888;background:#f0eee8;cursor:not-allowed}
+.internship-extra-filters{display:grid;grid-template-columns:repeat(3,minmax(0,1fr)) minmax(130px,.7fr);gap:12px;align-items:end;padding:14px;background:#efede7;border:1px solid #e0ddd5;border-radius:7px}
+.filter-actions{display:flex;align-items:end;min-width:0}
+.clear-filters{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:46px;padding:10px 14px;background:#fff;color:#26251f;border:1px solid #d1ccc1;font-size:13px;white-space:nowrap}
+.clear-filters:hover:not(:disabled){background:#f8f6f1;border-color:#8d877b}
+.clear-filters:disabled{opacity:.45;cursor:not-allowed}
+.filter-hint{font-size:12px;color:#777;margin:9px 2px}
+.results-header{display:flex;align-items:center;justify-content:space-between;gap:16px;margin:25px 0 13px;padding-bottom:12px;border-bottom:1px solid #dedbd3}
+.results-header p{margin:0;color:#68645b;font-size:14px}
+.results-header p strong{font-size:17px;color:#181816}
+.results-range{font-size:12px;color:#777;white-space:nowrap}
+.internship-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;align-items:stretch}
+.internship-card{display:flex;flex-direction:column;min-width:0;min-height:0;padding:22px 22px 17px;gap:0;border-radius:7px;transition:transform .16s ease,border-color .16s ease,box-shadow .16s ease}
+.internship-card:hover{transform:translateY(-3px);border-color:#9d9688;box-shadow:0 8px 22px rgba(35,32,25,.06)}
+.internship-card:focus-visible{outline:3px solid #80664f;outline-offset:3px}
+.internship-card-top{display:flex;align-items:center;justify-content:space-between;gap:10px;min-width:0}
+.job-company{display:block;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:12px;font-weight:700;letter-spacing:.01em;color:#625747}
+.work-mode-pill{display:inline-flex;flex-shrink:0;padding:5px 8px;border:1px solid #dedbd3;border-radius:999px;background:#f6f4ef;color:#5d594f;font-size:10px;text-transform:capitalize;white-space:nowrap}
+.internship-card h2{margin:17px 0 9px;font-size:25px;line-height:1.12;overflow-wrap:anywhere}
+.internship-description{min-height:60px;margin:0;color:#68645b;font-size:13px;line-height:1.55;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.internship-tags{display:flex;flex-wrap:wrap;gap:6px;margin:14px 0 17px;min-height:26px;align-content:flex-start}
+.internship-tag{display:inline-flex;padding:5px 8px;border-radius:4px;background:#f2f0eb;border:1px solid #e5e1d8;color:#555147;font-size:10px;line-height:1.2}
+.internship-tag.tag-more{font-weight:700}
+.internship-card-metrics{display:grid;grid-template-columns:1fr 1fr;gap:13px 10px;padding:15px 0;border-top:1px solid #ece9e2;border-bottom:1px solid #ece9e2;margin-top:auto}
+.internship-card-metrics div{min-width:0;display:flex;flex-direction:column;gap:4px}
+.internship-card-metrics div span{font-size:10px;color:#777168;text-transform:uppercase;letter-spacing:.04em}
+.internship-card-metrics div strong{font-size:14px;font-weight:700;overflow-wrap:anywhere}
+.internship-card-footer{display:flex;flex-direction:column;gap:8px;padding-top:14px}
+.internship-card-footer>span{display:flex;align-items:center;gap:7px;color:#6c675e;font-size:11px;line-height:1.35}
+.internship-card-footer svg{flex-shrink:0}
+.internship-card-footer .view-opportunity{display:flex;justify-content:space-between;padding-top:10px;margin-top:2px;border-top:1px solid #f0eee8;color:#28271f;font-size:12px;font-weight:700}
+.internship-empty{max-width:680px;margin:24px auto 40px;text-align:center}
+.internship-empty .state{margin-bottom:12px}
+.internship-empty>p{color:#716c62;line-height:1.55;font-size:14px}
+.internship-empty .clear-filters{margin:8px auto}
+.internship-pagination{margin:28px 0 4px}
+.internship-pagination span{font-size:13px;color:#6e695f;padding:0 8px}
+@media(max-width:1120px){.internship-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.internship-search-row .filter-control{flex-basis:150px;width:150px}.internship-extra-filters{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:850px){.filterbar.internship-search-row{flex-direction:column;align-items:stretch}.internship-search-row>.search{width:100%;max-width:none;flex:auto}.internship-search-row .filter-control{width:100%;flex:auto}.internship-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:560px){.internship-grid{grid-template-columns:minmax(0,1fr)}.internship-card{padding:19px}.internship-card h2{font-size:23px}.internship-extra-filters{grid-template-columns:minmax(0,1fr);padding:12px}.results-header{align-items:flex-start;flex-direction:column;gap:5px}.internships-page{padding-left:20px;padding-right:20px}}
