@@ -59,3 +59,66 @@
 @media(max-width:1120px){.internship-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.internship-search-row .filter-control{flex-basis:150px;width:150px}.internship-extra-filters{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:850px){.filterbar.internship-search-row{flex-direction:column;align-items:stretch}.internship-search-row>.search{width:100%;max-width:none;flex:auto}.internship-search-row .filter-control{width:100%;flex:auto}.internship-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:560px){.internship-grid{grid-template-columns:minmax(0,1fr)}.internship-card{padding:19px}.internship-card h2{font-size:23px}.internship-extra-filters{grid-template-columns:minmax(0,1fr);padding:12px}.results-header{align-items:flex-start;flex-direction:column;gap:5px}.internships-page{padding-left:20px;padding-right:20px}}
+
+/* Admin management */
+.admin-page{max-width:1600px;margin:0 auto}
+.admin-analytics>div{min-width:0;overflow:hidden}
+.admin-trends{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin:24px 0 34px}
+.trend-panel{min-width:0;background:#fff;border:1px solid #dedbd3;padding:20px 22px;border-radius:6px}
+.trend-heading{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:17px}
+.trend-heading h2{font:24px 'DM Serif Display',serif;margin:0}
+.trend-heading>span{font-size:11px;color:#777;white-space:nowrap}
+.trend-rows{display:grid;gap:12px}
+.trend-row{display:grid;grid-template-columns:84px minmax(0,1fr) 42px;align-items:center;gap:10px}
+.trend-month{font-size:11px;color:#68645b;font-variant-numeric:tabular-nums}
+.trend-track{height:11px;background:#f0eee8;border-radius:3px;overflow:hidden}
+.trend-track>span{display:block;height:100%;background:#80664f;border-radius:3px;transition:width .25s ease}
+.trend-row>strong{font-size:12px;text-align:right;font-variant-numeric:tabular-nums}
+.admin-records{margin-top:42px}
+.admin-section-heading{display:flex;align-items:end;justify-content:space-between;gap:16px}
+.admin-section-heading h2{font:34px 'DM Serif Display',serif;margin:7px 0 0}
+.record-count{font-size:12px;color:#777;white-space:nowrap;padding-bottom:5px}
+.admin-tabs{margin:18px 0}
+.admin-tabs button{font-size:12px}
+.management-panel{border:1px solid #dedbd3;background:#fff;padding:18px;margin-bottom:30px;border-radius:6px}
+.management-toolbar{display:flex;align-items:end;justify-content:space-between;gap:18px;margin-bottom:15px}
+.management-toolbar .filter-control{width:230px;max-width:100%}
+.management-toolbar>p,.application-review-count{font-size:12px;color:#706b62;margin:0 0 7px}
+.admin-management-table{margin:0;max-height:660px}
+.admin-management-table td{vertical-align:middle}
+.admin-management-table td:first-child{min-width:210px;white-space:normal}
+.admin-management-table td:nth-child(2){min-width:150px;white-space:normal}
+.admin-management-table td:nth-child(4){min-width:95px}
+.table-subtext{display:block;color:#777168;font-size:11px;margin-top:5px;line-height:1.4}
+.application-count{display:inline-flex;align-items:center;gap:6px;font-variant-numeric:tabular-nums}
+.admin-row-actions{display:flex;align-items:center;gap:7px;white-space:nowrap}
+.admin-row-actions button,.editor-actions button,.applicant-actions>button{display:inline-flex;align-items:center;justify-content:center;gap:7px}
+.admin-secondary-button{padding:8px 10px;background:#fff!important;color:#26251f!important;border:1px solid #d5d0c5!important;font-size:11px;white-space:nowrap}
+.admin-secondary-button:hover:not(:disabled){background:#f4f1eb!important;border-color:#a49c8d!important}
+.admin-secondary-button.close-posting{color:#8b342d!important}
+.admin-secondary-button:disabled{opacity:.45;cursor:not-allowed}
+.editor-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.post-form-footer{align-items:center}
+.application-review-toolbar{display:grid;grid-template-columns:minmax(220px,1.4fr) minmax(165px,.7fr) minmax(240px,1fr);gap:12px;align-items:end;margin:0 0 12px}
+.application-review-toolbar .filter-control{min-width:0}
+.application-review-count{margin:7px 0 14px}
+.admin-applicant-list{display:grid;gap:12px}
+.applicant-card{border:1px solid #e4e0d8;border-radius:6px;padding:17px 18px;background:#fff}
+.applicant-main{display:flex;align-items:flex-start;gap:13px;min-width:0}
+.applicant-initial{height:42px;width:42px;flex:0 0 42px;display:grid;place-items:center;border-radius:50%;background:#eeeae1;color:#5d4b3c;font:23px 'DM Serif Display',serif}
+.applicant-identity{flex:1;min-width:0}
+.applicant-identity h3{font-size:15px;margin:0 0 5px;overflow-wrap:anywhere}
+.applicant-identity>p{font-size:12px;color:#777168;margin:0 0 10px;overflow-wrap:anywhere}
+.applicant-tags{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.applicant-tags span{display:inline-flex;max-width:100%;padding:5px 8px;background:#f4f2ed;border:1px solid #e7e3dc;border-radius:4px;color:#625d54;font-size:10px;overflow-wrap:anywhere}
+.applicant-status{flex:0 0 auto;display:flex;align-items:flex-end;flex-direction:column;gap:7px}
+.applicant-status small{font-size:10px;color:#777168;white-space:nowrap}
+.applicant-actions{display:flex;align-items:end;justify-content:flex-end;gap:10px;margin-top:15px;padding-top:13px;border-top:1px solid #eeebe5}
+.applicant-actions .filter-control{width:220px;max-width:100%}
+.applicant-actions>button{min-height:43px;padding:10px 13px;font-size:12px}
+.applicant-actions>button:disabled{opacity:.5;cursor:not-allowed}
+.cover-letter-details{margin-top:13px;padding-top:10px;border-top:1px solid #eeebe5}
+.cover-letter-details summary{font-size:12px;font-weight:700;cursor:pointer;color:#625747}
+.cover-letter-details p{font-size:13px;line-height:1.6;color:#555147;white-space:pre-wrap;overflow-wrap:anywhere}
+@media(max-width:1050px){.admin-trends{grid-template-columns:1fr}.application-review-toolbar{grid-template-columns:repeat(2,minmax(0,1fr))}.application-review-search{grid-column:1/-1}}
+@media(max-width:760px){.management-toolbar{align-items:stretch;flex-direction:column;gap:8px}.management-toolbar .filter-control{width:100%}.admin-management-table{max-height:none}.admin-row-actions{align-items:stretch;flex-direction:column}.admin-row-actions button{justify-content:center}.applicant-main{flex-wrap:wrap}.applicant-status{margin-left:55px;align-items:flex-start}.application-review-toolbar{grid-template-columns:minmax(0,1fr)}.application-review-search{grid-column:auto}.applicant-actions{align-items:stretch;flex-direction:column}.applicant-actions .filter-control{width:100%}.applicant-actions>button{width:100%}.trend-panel{padding:17px}.trend-row{grid-template-columns:70px minmax(0,1fr) 32px;gap:7px}.admin-section-heading{align-items:flex-start;flex-direction:column;gap:7px}}
