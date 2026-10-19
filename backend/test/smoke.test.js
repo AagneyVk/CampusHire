@@ -7,6 +7,20 @@ test('invalid password rejected and valid login succeeds',async()=>{assert.equal
 test('student cannot access admin routes',async()=>assert.equal((await request(app).get('/api/admin/applications').set('Authorization',`Bearer ${studentToken}`)).status,403));
 test('incomplete student must complete profile before using the dashboard',async()=>{const r=await request(app).get('/api/student/dashboard').set('Authorization',`Bearer ${studentToken}`);assert.equal(r.status,403);assert.equal(r.body.code,'PROFILE_INCOMPLETE')});
 test('internship list supports pagination and invalid id validation',async()=>{const r=await request(app).get('/api/internships?page=1&limit=2');assert.equal(r.status,200);assert.ok(Array.isArray(r.body.data));assert.equal((await request(app).get('/api/internships/not-a-number')).status,400)});
+
+test('internship discovery supports partial location, skill, minimum stipend and sorting',async()=>{
+ const[[fixture]]=await pool.query("SELECT i.location,i.stipend,(SELECT sk.name FROM internship_skills x JOIN skills sk ON sk.skill_id=x.skill_id WHERE x.internship_id=i.internship_id LIMIT 1) skill_name FROM internships i WHERE i.status='active' AND i.application_deadline>NOW() AND EXISTS(SELECT 1 FROM internship_skills x WHERE x.internship_id=i.internship_id) LIMIT 1");
+ assert.ok(fixture,'seed must contain an active internship with at least one skill');
+ const locationPrefix=String(fixture.location).slice(0,Math.min(5,String(fixture.location).length));
+ const minimum=Number(fixture.stipend);
+ const response=await request(app).get('/api/internships').query({location:locationPrefix,skill:fixture.skill_name,minStipend:String(minimum),sort:'stipend_high',limit:50});
+ assert.equal(response.status,200);
+ assert.ok(response.body.total>0,'filters should find the chosen fixture');
+ assert.ok(response.body.data.every(row=>String(row.location).toLowerCase().includes(locationPrefix.toLowerCase())&&Number(row.stipend)>=minimum&&String(row.skills||'').split(', ').includes(fixture.skill_name)),'all returned rows must satisfy filters');
+ assert.ok(response.body.data.every((row,index,rows)=>index===0||Number(rows[index-1].stipend)>=Number(row.stipend)),'highest stipend sort should be descending');
+ assert.equal((await request(app).get('/api/internships?minStipend=-1')).status,400);
+});
+
 test('unique application constraint is enforced through API',async()=>{const[[i]]=await pool.query("SELECT internship_id FROM internships WHERE status='active' AND application_deadline>NOW() LIMIT 1");assert.ok(i,'demo seed must contain active internship');const[[skill]]=await pool.query('SELECT skill_id FROM skills LIMIT 1');assert.ok(skill,'seed must contain at least one skill');const complete=await request(app).put('/api/student/complete-profile').set('Authorization',`Bearer ${studentToken}`).send({firstName:'Integration',cgpa:10,skills:[{skillId:skill.skill_id,proficiency:'intermediate'}]});assert.equal(complete.status,200);assert.equal(complete.body.profileComplete,true);assert.equal((await request(app).post(`/api/student/internships/${i.internship_id}/apply`).set('Authorization',`Bearer ${studentToken}`).send({})).status,201);assert.equal((await request(app).post(`/api/student/internships/${i.internship_id}/apply`).set('Authorization',`Bearer ${studentToken}`).send({})).status,409)});
 test('closed internship trigger rejects application when fixture exists',async()=>{const[[i]]=await pool.query("SELECT internship_id FROM internships WHERE status IN('closed','cancelled') OR application_deadline<=NOW() LIMIT 1");if(!i)return;assert.equal((await request(app).post(`/api/student/internships/${i.internship_id}/apply`).set('Authorization',`Bearer ${studentToken}`).send({})).status,409)});
 after(async()=>{await cleanup();await pool.end()});
