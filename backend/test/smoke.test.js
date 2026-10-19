@@ -1,5 +1,5 @@
-import test,{before,after}from'node:test';import assert from'node:assert/strict';import request from'supertest';process.env.NODE_ENV='test';process.env.JWT_SECRET=process.env.JWT_SECRET||'integration-secret';const{default:app}=await import('../src/app.js');const{pool}=await import('../src/db.js');let departmentId,studentToken,studentId;async function cleanup(){const[[u]]=await pool.execute("SELECT s.student_id,u.user_id FROM students s JOIN users u ON u.user_id=s.user_id WHERE u.email='integration.student@example.edu'");if(!u)return;await pool.execute('DELETE FROM applications WHERE student_id=?',[u.student_id]);await pool.execute('DELETE FROM students WHERE student_id=?',[u.student_id]);await pool.execute('DELETE FROM users WHERE user_id=?',[u.user_id])}
-before(async()=>{const[[d]]=await pool.query('SELECT department_id FROM departments LIMIT 1');departmentId=d.department_id;await cleanup()});
+import test,{before,after}from'node:test';import jwt from'jsonwebtoken';import assert from'node:assert/strict';import request from'supertest';process.env.NODE_ENV='test';process.env.JWT_SECRET=process.env.JWT_SECRET||'integration-secret';const{default:app}=await import('../src/app.js');const{pool}=await import('../src/db.js');let departmentId,studentToken,studentId,adminToken;async function cleanup(){const[[u]]=await pool.execute("SELECT s.student_id,u.user_id FROM students s JOIN users u ON u.user_id=s.user_id WHERE u.email='integration.student@example.edu'");if(!u)return;await pool.execute('DELETE FROM applications WHERE student_id=?',[u.student_id]);await pool.execute('DELETE FROM students WHERE student_id=?',[u.student_id]);await pool.execute('DELETE FROM users WHERE user_id=?',[u.user_id])}
+before(async()=>{const[[d]]=await pool.query('SELECT department_id FROM departments LIMIT 1');departmentId=d.department_id;const[[a]]=await pool.query("SELECT user_id,email FROM users WHERE role='admin' LIMIT 1");assert.ok(a,'seed must contain an admin account');adminToken=jwt.sign({id:a.user_id,email:a.email,role:'admin'},process.env.JWT_SECRET,{expiresIn:'30m'});await cleanup()});
 test('health reaches MySQL',async()=>{const r=await request(app).get('/api/health');assert.equal(r.status,200);assert.equal(r.body.status,'ok')});
 test('registration validates and creates student transactionally',async()=>{const r=await request(app).post('/api/auth/register').send({email:'integration.student@example.edu',password:'StrongPass123!',registrationNo:'INTEGRATION001',departmentId,firstName:'Integration',graduationYear:2028});assert.equal(r.status,201)});
 test('duplicate email/registration is rejected',async()=>{const r=await request(app).post('/api/auth/register').send({email:'integration.student@example.edu',password:'StrongPass123!',registrationNo:'INTEGRATION001',departmentId,firstName:'Integration',graduationYear:2028});assert.equal(r.status,409)});
@@ -22,5 +22,27 @@ test('internship discovery supports partial location, skill, minimum stipend and
 });
 
 test('unique application constraint is enforced through API',async()=>{const[[i]]=await pool.query("SELECT internship_id FROM internships WHERE status='active' AND application_deadline>NOW() LIMIT 1");assert.ok(i,'demo seed must contain active internship');const[[skill]]=await pool.query('SELECT skill_id FROM skills LIMIT 1');assert.ok(skill,'seed must contain at least one skill');const complete=await request(app).put('/api/student/complete-profile').set('Authorization',`Bearer ${studentToken}`).send({firstName:'Integration',cgpa:10,skills:[{skillId:skill.skill_id,proficiency:'intermediate'}]});assert.equal(complete.status,200);assert.equal(complete.body.profileComplete,true);assert.equal((await request(app).post(`/api/student/internships/${i.internship_id}/apply`).set('Authorization',`Bearer ${studentToken}`).send({})).status,201);assert.equal((await request(app).post(`/api/student/internships/${i.internship_id}/apply`).set('Authorization',`Bearer ${studentToken}`).send({})).status,409)});
+
+test('admin can close and reopen an internship only while its deadline is open',async()=>{
+ const[[i]]=await pool.query("SELECT internship_id,application_deadline FROM internships WHERE status='active' AND application_deadline>NOW() ORDER BY internship_id LIMIT 1");
+ assert.ok(i,'seed must contain an active internship with a future deadline');
+ const closed=await request(app).patch('/api/admin/internships/'+i.internship_id+'/status').set('Authorization',`Bearer ${adminToken}`).send({status:'closed'});
+ assert.equal(closed.status,200);assert.equal(closed.body.status,'closed');
+ const reopened=await request(app).patch('/api/admin/internships/'+i.internship_id+'/status').set('Authorization',`Bearer ${adminToken}`).send({status:'active'});
+ assert.equal(reopened.status,200);assert.equal(reopened.body.status,'active');
+ assert.equal((await request(app).patch('/api/admin/internships/'+i.internship_id+'/status').set('Authorization',`Bearer ${adminToken}`).send({status:'not-a-status'})).status,400);
+});
+test('admin can review enriched applicant records and transition application status',async()=>{
+ const list=await request(app).get('/api/admin/applications').set('Authorization',`Bearer ${adminToken}`);
+ assert.equal(list.status,200);assert.ok(Array.isArray(list.body));
+ const appRow=list.body.find(a=>a.student_email==='integration.student@example.edu');
+ assert.ok(appRow,'admin applicant list should include the integration student application');
+ assert.ok(appRow.student_name);assert.ok(appRow.internship_title);assert.ok(appRow.company);
+ const next=await request(app).patch('/api/admin/applications/'+appRow.application_id+'/status').set('Authorization',`Bearer ${adminToken}`).send({status:'under_review',reason:'Admin management smoke test'});
+ assert.equal(next.status,200);assert.equal(next.body.newStatus,'under_review');
+ const refreshed=await request(app).get('/api/admin/applications').set('Authorization',`Bearer ${adminToken}`);
+ assert.equal(refreshed.body.find(a=>a.application_id===appRow.application_id).status,'under_review');
+});
+
 test('closed internship trigger rejects application when fixture exists',async()=>{const[[i]]=await pool.query("SELECT internship_id FROM internships WHERE status IN('closed','cancelled') OR application_deadline<=NOW() LIMIT 1");if(!i)return;assert.equal((await request(app).post(`/api/student/internships/${i.internship_id}/apply`).set('Authorization',`Bearer ${studentToken}`).send({})).status,409)});
 after(async()=>{await cleanup();await pool.end()});
