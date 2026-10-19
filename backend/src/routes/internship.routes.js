@@ -60,7 +60,7 @@ r.get('/',asyncRoute(async(q,s)=>{
 }));
 
 r.get('/:id',asyncRoute(async(q,s)=>{
- if(!/^\\d+$/.test(q.params.id))return s.status(400).json({error:'Invalid internship id'});
+ if(!/^\d+$/.test(q.params.id))return s.status(400).json({error:'Invalid internship id'});
  const[rows]=await pool.execute('SELECT i.*,c.name company,c.website,ind.name industry FROM internships i JOIN companies c ON c.company_id=i.company_id JOIN industries ind ON ind.industry_id=c.industry_id WHERE i.internship_id=?',[q.params.id]);
  if(!rows[0])return s.status(404).json({error:'Internship not found'});
  const[skills]=await pool.execute('SELECT sk.skill_id,sk.name,x.is_required FROM internship_skills x JOIN skills sk ON sk.skill_id=x.skill_id WHERE x.internship_id=?',[q.params.id]);
