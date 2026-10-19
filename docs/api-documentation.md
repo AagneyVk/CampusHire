@@ -25,7 +25,8 @@ Base: `http://localhost:4000/api`. Protected requests use `Authorization: Bearer
 
 ## Placement admin (`admin` role)
 - `GET /admin/analytics`
-- `GET /admin/{students|companies|internships|applications|interviews|offers|records|evaluations}`
+- `GET /admin/{students|companies|internships|applications|interviews|offers|records|evaluations}` — internship rows include company and application counts; application rows include joined student, internship and company details.
+- `PATCH /admin/internships/:id/status` — publish, close, cancel or reopen a posting; reopening requires a future deadline.
 - `POST /admin/companies`
 - `POST /admin/internships`
 - `PATCH /admin/internships/:id`
