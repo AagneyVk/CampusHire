@@ -7,7 +7,7 @@ Base: `http://localhost:4000/api`. Protected requests use `Authorization: Bearer
 - `POST /auth/register`
 - `POST /auth/login`
 - `GET /auth/me`
-- `GET /internships?q=&company=&location=&mode=&skill=&minStipend=&page=&limit=&sort=`
+- `GET /internships?q=&company=&location=&mode=&skill=&minStipend=&page=&limit=&sort=` — location supports partial matching; `minStipend` is the minimum monthly stipend; `skill` matches a skill name; `sort` accepts `deadline`, `newest`, `stipend_high` or `stipend_low`.
 - `GET /internships/:id`
 
 ## Student (`student` role)
