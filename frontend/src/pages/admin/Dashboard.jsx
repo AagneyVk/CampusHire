@@ -6,7 +6,7 @@ import{StatCard,DataTable,LoadingState,ErrorState,EmptyState,StatusBadge}from'..
 
 const blankForm={companyId:'',title:'',description:'',location:'',workMode:'remote',stipend:'0',durationWeeks:'12',openings:'1',minimumCgpa:'',applicationDeadline:'',startDate:'',status:'active'};
 const nextApplicationStatuses={
- submitted:['under_review','shortlisted','rejected','withdrawn'],
+ submitted:['under_review','rejected','withdrawn'],
  under_review:['shortlisted','rejected','withdrawn'],
  shortlisted:['interview','rejected','withdrawn'],
  interview:['offered','rejected','withdrawn'],
