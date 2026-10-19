@@ -40,7 +40,8 @@ export default function Internships(){
   return()=>controller.abort();
  },[q,location,mode,skill,minStipend,sort,page]);
 
- const filtersActive=Boolean(q.trim()||location.trim()||mode||skill||minStipend!==''||sort!=='deadline');
+ const criteriaActive=Boolean(q.trim()||location.trim()||mode||skill||minStipend!=='');
+ const filtersActive=criteriaActive||sort!=='deadline';
  function clearFilters(){setQ('');setLocation('');setMode('');setSkill('');setMinStipend('');setSort('deadline');setPage(1)}
  function setFilter(setter,value){setter(value);setPage(1)}
 
@@ -65,7 +66,7 @@ export default function Internships(){
   </section>
 
   <div className="results-header" aria-live="polite">
-   <p>{loading?'Updating opportunities…':<><strong>{total.toLocaleString('en-IN')}</strong> {total===1?'opportunity':'opportunities'} found{filtersActive?' for your search':''}</>}</p>
+   <p>{loading?'Updating opportunities…':<><strong>{total.toLocaleString('en-IN')}</strong> {total===1?'opportunity':'opportunities'} found{criteriaActive?' for your search':''}</>}</p>
    {!loading&&total>0&&<span className="results-range">Showing {(page-1)*PAGE_SIZE+1}–{Math.min(page*PAGE_SIZE,total)} of {total.toLocaleString('en-IN')}</span>}
   </div>
 
@@ -80,13 +81,13 @@ export default function Internships(){
      <div className="internship-card-metrics">
       <div><span>Monthly stipend</span><strong>{money(job.stipend)}</strong></div>
       <div><span>Duration</span><strong>{job.duration_weeks} weeks</strong></div>
-      <div><span>Minimum CGPA</span><strong>{job.minimum_cgpa==null?'Not specified':Number(job.minimum_cgpa).toFixed(1)}</strong></div>
+      <div><span>Minimum CGPA</span><strong>{job.minimum_cgpa==null?'Not specified':Number(job.minimum_cgpa).toLocaleString('en-IN',{maximumFractionDigits:2})}</strong></div>
       <div><span>Openings</span><strong>{job.openings}</strong></div>
      </div>
      <div className="internship-card-footer"><span><MapPin size={14}/>{job.location}</span><span><CalendarClock size={14}/>Apply by {dateLabel(job.application_deadline)}</span><span className="view-opportunity">View details <ArrowUpRight size={15}/></span></div>
     </Link>
    })}</div>
-   :<section className="internship-empty"><EmptyState>No matching internships found.</EmptyState><p>Try a different keyword or remove one or more filters to see more opportunities.</p><button type="button" className="clear-filters" onClick={clearFilters} disabled={!filtersActive}><RotateCcw size={15}/>Clear all filters</button></section>}
+   :<section className="internship-empty"><EmptyState>{criteriaActive?'No matching internships found.':'No currently open internships found.'}</EmptyState><p>{criteriaActive?'Try a different keyword or remove one or more filters to see more opportunities.':'Please check back later for new opportunities.'}</p><button type="button" className="clear-filters" onClick={clearFilters} disabled={!filtersActive}><RotateCcw size={15}/>Clear all filters</button></section>}
 
   {!loading&&!error&&total>0&&<nav className="pagination internship-pagination" aria-label="Internship result pages"><button disabled={page<=1} onClick={()=>setPage(p=>p-1)}>Previous</button><span>Page {page} of {pages||1}</span><button disabled={page>=pages} onClick={()=>setPage(p=>p+1)}>Next</button></nav>}
  </main></Layout>
