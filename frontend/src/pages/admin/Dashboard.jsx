@@ -45,7 +45,9 @@ export default function AdminDashboard(){
   try{
    if(!form.companyId)throw new Error('Select a company before saving.');
    if(!form.applicationDeadline)throw new Error('Set an application deadline.');
-   const deadline=form.applicationDeadline.length===16?form.applicationDeadline.replace('T',' ')+':00':form.applicationDeadline.replace('T',' ');
+   const deadlineDate=new Date(form.applicationDeadline);
+   if(Number.isNaN(deadlineDate.getTime()))throw new Error('Enter a valid application deadline.');
+   const deadline=deadlineDate.toISOString().slice(0,19).replace('T',' ');
    const payload={...form,companyId:Number(form.companyId),stipend:Number(form.stipend),durationWeeks:Number(form.durationWeeks),openings:Number(form.openings),minimumCgpa:form.minimumCgpa===''?null:Number(form.minimumCgpa),applicationDeadline:deadline,startDate:form.startDate||null};
    const result=await api(editingId?'/admin/internships/'+editingId:'/admin/internships',{method:editingId?'PATCH':'POST',body:JSON.stringify(payload)});
    setSuccess(editingId?'Internship updated successfully.':'Internship posted successfully. ID: '+result.internshipId);
