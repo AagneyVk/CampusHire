@@ -1,5 +1,5 @@
 import React,{useEffect,useMemo,useState}from'react';
-import{Edit3,Pause,Play,Search,X,Save,Users,Briefcase}from'lucide-react';
+import{Edit3,Pause,Play,X,Save,Users}from'lucide-react';
 import Layout from'../../components/Layout.jsx';
 import{api}from'../../services/api.js';
 import{StatCard,DataTable,LoadingState,ErrorState,EmptyState,StatusBadge}from'../../components/UI.jsx';
@@ -60,7 +60,6 @@ export default function AdminDashboard(){
   try{await api('/admin/internships/'+job.internship_id+'/status',{method:'PATCH',body:JSON.stringify({status:next})});setManagementMessage('"'+job.title+'" is now '+statusLabel(next)+'.');await refreshRows('internships')}
   catch(e){setManagementError(e.message)}
  }
- const internshipChoices=useMemo(()=>rows.filter(r=>r.internship_id!==undefined&&r.title).map(r=>({id:String(r.internship_id),label:(r.title||'Internship')+' — '+(r.company_name||r.company||'')})),[rows,resource]);
  const visibleInternships=useMemo(()=>resource!=='internships'?[]:rows.filter(j=>internshipStatusFilter==='all'||j.status===internshipStatusFilter),[rows,resource,internshipStatusFilter]);
  const visibleApplications=useMemo(()=>{
   if(resource!=='applications')return[];
